@@ -56,8 +56,25 @@ model User {
   reviews            Review[]
   userBadges         UserBadge[]
   products           Product[]      @relation("VendorProducts")
+  addresses          Address[]
 
   @@map("users")
+}
+
+model Address {
+  id        String   @id @default(uuid())
+  userId    String
+  label     String   // Ex: "Maison", "Bureau", "Campus"
+  street    String
+  city      String
+  district  String?
+  phone     String?
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("addresses")
 }
 
 model Category {
@@ -204,4 +221,16 @@ model Review {
 
   @@unique([userId, productId])
   @@map("reviews")
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
 }

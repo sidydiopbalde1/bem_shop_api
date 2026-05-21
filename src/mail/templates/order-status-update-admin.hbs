@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Statut de commande mis à jour</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 30px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .header { background: #e84118; padding: 30px 24px; text-align: center; }
+    .header h1 { color: #ffffff; margin: 0; font-size: 22px; }
+    .body { padding: 28px 24px; color: #333; }
+    .order-id { background: #fff5f5; border-left: 4px solid #e84118; padding: 12px 16px; border-radius: 4px; font-weight: bold; font-size: 15px; margin-bottom: 20px; }
+    .client-info { background: #f9f9f9; padding: 14px 16px; border-radius: 6px; font-size: 14px; margin-bottom: 20px; }
+    .status-badge { display: inline-block; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 15px; margin: 8px 0; }
+    .status-PENDING    { background: #fff3cd; color: #856404; }
+    .status-CONFIRMED  { background: #d1ecf1; color: #0c5460; }
+    .status-SHIPPED    { background: #d4edda; color: #155724; }
+    .status-DELIVERED  { background: #c3e6cb; color: #155724; }
+    .status-CANCELLED  { background: #f8d7da; color: #721c24; }
+    .footer { background: #f4f4f4; padding: 18px 24px; text-align: center; font-size: 12px; color: #888; }
+    .btn { display: inline-block; margin-top: 20px; padding: 12px 28px; background: #e84118; color: #fff; text-decoration: none; border-radius: 6px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>BEM Shop — Statut de commande mis à jour</h1>
+    </div>
+    <div class="body">
+      <div class="order-id">Commande #{{orderId}}</div>
+
+      <div class="client-info">
+        <strong>Client :</strong> {{clientFirstName}} {{clientLastName}}<br/>
+        <strong>Email :</strong> {{clientEmail}}
+      </div>
+
+      <p>Nouveau statut :</p>
+      <span class="status-badge status-{{status}}">{{statusLabel}}</span>
+
+      <a href="{{frontendUrl}}/admin/orders/{{fullOrderId}}" class="btn">Voir la commande</a>
+    </div>
+    <div class="footer">
+      &copy; BEM Shop — Notification automatique d'administration.
+    </div>
+  </div>
+</body>
+</html>

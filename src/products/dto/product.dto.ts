@@ -1,6 +1,6 @@
 import {
   IsString, IsNumber, IsOptional, IsUUID,
-  IsBoolean, Min,
+  IsBoolean, Min, IsBooleanString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -38,6 +38,9 @@ export class UpdateProductDto {
   @ApiPropertyOptional({ example: 30 })
   @Type(() => Number) @IsNumber() @IsOptional() stock?: number;
 
+  @ApiPropertyOptional({ example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' })
+  @IsUUID() @IsOptional() categoryId?: string;
+
   @ApiPropertyOptional({ example: true, description: 'Approuver ou désapprouver le produit' })
   @IsBoolean() @IsOptional() isApproved?: boolean;
 
@@ -52,6 +55,9 @@ export class ProductFilterDto {
   @ApiPropertyOptional({ example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' })
   @IsUUID() @IsOptional() categoryId?: string;
 
+  @ApiPropertyOptional({ example: 'vetements', description: 'Slug de la catégorie (alternative à categoryId)' })
+  @IsString() @IsOptional() categorySlug?: string;
+
   @ApiPropertyOptional({ example: 5000, description: 'Prix minimum en FCFA' })
   @IsNumber() @IsOptional() @Type(() => Number) minPrice?: number;
 
@@ -63,4 +69,7 @@ export class ProductFilterDto {
 
   @ApiPropertyOptional({ example: 20, default: 20 })
   @IsNumber() @IsOptional() @Type(() => Number) limit?: number = 20;
+
+  @ApiPropertyOptional({ example: true, description: 'Filtrer par statut d\'approbation (admin uniquement). Si omis, seuls les produits approuvés sont retournés côté public.' })
+  @IsOptional() @IsBooleanString() isApproved?: string;
 }

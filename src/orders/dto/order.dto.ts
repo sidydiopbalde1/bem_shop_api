@@ -3,6 +3,20 @@ import { Type } from 'class-transformer';
 import { DeliveryType, OrderStatus } from '@prisma/client';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+export class OrderAdminFilterDto {
+  @ApiPropertyOptional({ example: 'user@example.com', description: 'Recherche par email utilisateur' })
+  @IsString() @IsOptional() search?: string;
+
+  @ApiPropertyOptional({ enum: OrderStatus, example: OrderStatus.PENDING })
+  @IsEnum(OrderStatus) @IsOptional() status?: OrderStatus;
+
+  @ApiPropertyOptional({ example: 1, default: 1 })
+  @IsNumber() @IsOptional() @Type(() => Number) page?: number = 1;
+
+  @ApiPropertyOptional({ example: 20, default: 20 })
+  @IsNumber() @IsOptional() @Type(() => Number) limit?: number = 20;
+}
+
 export class OrderItemDto {
   @ApiProperty({ example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' })
   @IsUUID() productId: string;

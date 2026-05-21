@@ -8,11 +8,24 @@ export class ProductsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(filters: ProductFilterDto) {
-    const { search, categoryId, minPrice, maxPrice, page = 1, limit = 20 } = filters;
+    const { search, categoryId, categorySlug, minPrice, maxPrice, page = 1, limit = 20, isApproved } = filters;
+
+    // Résoudre le slug en categoryId si fourni
+    let resolvedCategoryId = categoryId;
+    if (!resolvedCategoryId && categorySlug) {
+      const cat = await this.prisma.category.findUnique({ where: { slug: categorySlug } });
+      resolvedCategoryId = cat?.id;
+    }
+
+    // isApproved: si explicitement fourni en query param, on l'utilise ; sinon défaut à true (catalogue public)
+    const approvedFilter: boolean | undefined =
+      isApproved === 'true' ? true :
+      isApproved === 'false' ? false :
+      true;
 
     const where: Prisma.ProductWhereInput = {
-      isApproved: true,
-      ...(categoryId && { categoryId }),
+      isApproved: approvedFilter,
+      ...(resolvedCategoryId && { categoryId: resolvedCategoryId }),
       ...(minPrice !== undefined || maxPrice !== undefined) && {
         price: {
           ...(minPrice !== undefined && { gte: minPrice }),

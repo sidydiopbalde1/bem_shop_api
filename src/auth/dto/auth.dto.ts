@@ -1,6 +1,20 @@
 import { IsEmail, IsString, MinLength, IsEnum, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+export class UpdateProfileDto {
+  @ApiPropertyOptional({ example: 'Fatou' })
+  @IsString() @IsOptional() firstName?: string;
+
+  @ApiPropertyOptional({ example: 'Diallo' })
+  @IsString() @IsOptional() lastName?: string;
+
+  @ApiPropertyOptional({ description: 'Nouveau mot de passe (min 8 caractères)', minLength: 8 })
+  @IsString() @MinLength(8) @IsOptional() newPassword?: string;
+
+  @ApiPropertyOptional({ description: 'Mot de passe actuel (requis si newPassword est fourni)' })
+  @IsString() @IsOptional() currentPassword?: string;
+}
+
 export enum UserRole {
   STUDENT = 'STUDENT',
   PARENT  = 'PARENT',

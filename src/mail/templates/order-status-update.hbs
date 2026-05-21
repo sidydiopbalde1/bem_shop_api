@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mise à jour de votre commande</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 30px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .header { background: #1a73e8; padding: 30px 24px; text-align: center; }
+    .header h1 { color: #ffffff; margin: 0; font-size: 22px; }
+    .body { padding: 28px 24px; color: #333; }
+    .status-badge { display: inline-block; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 15px; margin: 16px 0; }
+    .status-PENDING    { background: #fff3cd; color: #856404; }
+    .status-CONFIRMED  { background: #d1ecf1; color: #0c5460; }
+    .status-SHIPPED    { background: #d4edda; color: #155724; }
+    .status-DELIVERED  { background: #c3e6cb; color: #155724; }
+    .status-CANCELLED  { background: #f8d7da; color: #721c24; }
+    .order-id { background: #f0f4ff; border-left: 4px solid #1a73e8; padding: 12px 16px; border-radius: 4px; font-weight: bold; font-size: 15px; margin-bottom: 20px; }
+    .footer { background: #f4f4f4; padding: 18px 24px; text-align: center; font-size: 12px; color: #888; }
+    .btn { display: inline-block; margin-top: 20px; padding: 12px 28px; background: #1a73e8; color: #fff; text-decoration: none; border-radius: 6px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>BEM Shop — Mise à jour de commande</h1>
+    </div>
+    <div class="body">
+      <h2>Bonjour {{clientFirstName}},</h2>
+      <p>Le statut de votre commande a été mis à jour.</p>
+
+      <div class="order-id">Commande #{{orderId}}</div>
+
+      <p>Nouveau statut :</p>
+      <span class="status-badge status-{{status}}">{{statusLabel}}</span>
+
+      {{#if isDelivered}}
+      <p>Votre commande a été livrée. Merci pour votre achat !</p>
+      {{/if}}
+      {{#if isCancelled}}
+      <p>Votre commande a été annulée. Pour toute question, contactez notre support.</p>
+      {{/if}}
+
+      <a href="{{frontendUrl}}/orders/{{fullOrderId}}" class="btn">Voir ma commande</a>
+    </div>
+    <div class="footer">
+      &copy; BEM Shop — Cet email a été envoyé automatiquement, merci de ne pas y répondre.
+    </div>
+  </div>
+</body>
+</html>

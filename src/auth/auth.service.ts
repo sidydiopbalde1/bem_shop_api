@@ -1,12 +1,12 @@
 import {
   Injectable, ConflictException,
-  UnauthorizedException, ForbiddenException,
+  UnauthorizedException, ForbiddenException, BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as argon2 from 'argon2';
 import { PrismaService } from '../prisma/prisma.service';
-import { RegisterDto, LoginDto, AuthResponseDto, UserRole } from './dto/auth.dto';
+import { RegisterDto, LoginDto, AuthResponseDto, UserRole, UpdateProfileDto } from './dto/auth.dto';
 import { JwtPayload } from './types/jwt-payload.type';
 import { GoogleUser } from './strategies/google.strategy';
 import { FacebookUser } from './strategies/facebook.strategy';
@@ -45,6 +45,33 @@ export class AuthService {
     if (!valid) throw new UnauthorizedException('Identifiants invalides');
 
     return this.issueAndPersistTokens(user);
+  }
+
+  async updateProfile(userId: string, dto: UpdateProfileDto) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new UnauthorizedException();
+
+    if (dto.newPassword) {
+      if (!dto.currentPassword) {
+        throw new BadRequestException('Le mot de passe actuel est requis pour en définir un nouveau.');
+      }
+      if (!user.passwordHash) {
+        throw new BadRequestException('Compte OAuth — impossible de définir un mot de passe.');
+      }
+      const valid = await argon2.verify(user.passwordHash, dto.currentPassword);
+      if (!valid) throw new UnauthorizedException('Mot de passe actuel incorrect.');
+    }
+
+    const data: Record<string, unknown> = {};
+    if (dto.firstName) data.firstName = dto.firstName;
+    if (dto.lastName)  data.lastName  = dto.lastName;
+    if (dto.newPassword) data.passwordHash = await argon2.hash(dto.newPassword);
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data,
+      select: { id: true, email: true, firstName: true, lastName: true, role: true, createdAt: true },
+    });
   }
 
   async logout(userId: string): Promise<void> {

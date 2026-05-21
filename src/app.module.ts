@@ -13,6 +13,8 @@ import { UsersModule }       from './users/users.module';
 import { AnalyticsModule }   from './analytics/analytics.module';
 import { UploadModule }      from './upload/upload.module';
 import { CategoriesModule }  from './categories/categories.module';
+import { ContactModule }     from './contact/contact.module';
+import { AddressesModule }  from './addresses/addresses.module';
 import { JwtAuthGuard, RolesGuard } from './auth/guards';
 
 @Module({
@@ -30,6 +32,8 @@ import { JwtAuthGuard, RolesGuard } from './auth/guards';
     AnalyticsModule,
     UploadModule,
     CategoriesModule,
+    ContactModule,
+    AddressesModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

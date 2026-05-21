@@ -1,5 +1,5 @@
 import {
-  Controller, Post, Get, Res,
+  Controller, Post, Get, Patch, Res,
   Body, UseGuards, HttpCode, HttpStatus,
 } from '@nestjs/common';
 import {
@@ -9,7 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto, AuthResponseDto } from './dto/auth.dto';
+import { RegisterDto, LoginDto, AuthResponseDto, UpdateProfileDto } from './dto/auth.dto';
 import { GetUser } from './decorators/get-user.decorator';
 import { Public } from './decorators/public.decorator';
 import { JwtRefreshGuard, GoogleAuthGuard } from './guards';
@@ -110,4 +110,14 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Profil utilisateur', schema: { example: { sub: 'uuid', email: 'fatou@ucad.sn', role: 'STUDENT' } } })
   @ApiResponse({ status: 401, description: 'Non authentifié' })
   me(@GetUser() user: Express.User) { return user; }
+
+  @Patch('profile')
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Mettre à jour son profil', description: 'Modifie le prénom, nom et/ou le mot de passe de l\'utilisateur connecté.' })
+  @ApiResponse({ status: 200, description: 'Profil mis à jour' })
+  @ApiResponse({ status: 400, description: 'Données invalides ou mot de passe actuel incorrect' })
+  @ApiResponse({ status: 401, description: 'Non authentifié' })
+  updateProfile(@GetUser('sub') userId: string, @Body() dto: UpdateProfileDto) {
+    return this.authService.updateProfile(userId, dto);
+  }
 }
