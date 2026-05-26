@@ -9,7 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { memoryStorage } from 'multer';
 import { ProductsService } from './products.service';
-import { CreateProductDto, UpdateProductDto, ProductFilterDto } from './dto/product.dto';
+import { CreateProductDto, UpdateProductDto, ProductFilterDto, SetThresholdDto } from './dto/product.dto';
 import { CloudinaryService } from '../upload/cloudinary.service';
 import { Public } from '../auth/decorators/public.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -46,6 +46,27 @@ export class ProductsController {
     return this.productsService.findAll(filters);
   }
 
+  // Doit être AVANT /:id pour éviter le conflit de route
+  @Roles(UserRole.ADMIN)
+  @Get('below-threshold')
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: 'Produits sous le seuil d\'alerte (admin)',
+    description: 'Retourne tous les produits dont le stock actuel est inférieur ou égal à leur seuil configuré.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Liste des produits en alerte',
+    schema: {
+      example: [
+        { id: '...', productName: 'Hoodie BEM', stock: 3, threshold: 5 },
+      ],
+    },
+  })
+  findBelowThreshold() {
+    return this.productsService.findBelowThreshold();
+  }
+
   @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Détail d\'un produit' })
@@ -72,11 +93,12 @@ export class ProductsController {
       type: 'object',
       required: ['name', 'price', 'stock', 'categoryId'],
       properties: {
-        name:        { type: 'string', example: 'Hoodie BEM 2024' },
-        description: { type: 'string', example: 'Hoodie officiel de la promotion BEM 2024, coton premium.' },
-        price:       { type: 'number', example: 15000, description: 'Prix en FCFA' },
-        stock:       { type: 'number', example: 50, description: 'Quantité en stock' },
-        categoryId:  { type: 'string', format: 'uuid', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' },
+        name:          { type: 'string', example: 'Hoodie BEM 2024' },
+        description:   { type: 'string', example: 'Hoodie officiel de la promotion BEM 2024, coton premium.' },
+        price:         { type: 'number', example: 15000, description: 'Prix de vente en FCFA' },
+        purchasePrice: { type: 'number', example: 8000, description: 'Prix d\'achat (coût) en FCFA — admin uniquement' },
+        stock:         { type: 'number', example: 50, description: 'Quantité en stock' },
+        categoryId:    { type: 'string', format: 'uuid', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' },
         images: {
           type: 'array',
           items: { type: 'string', format: 'binary' },
@@ -114,11 +136,12 @@ export class ProductsController {
     schema: {
       type: 'object',
       properties: {
-        name:        { type: 'string', example: 'Hoodie BEM 2024 — Édition limitée' },
-        description: { type: 'string', example: 'Description mise à jour.' },
-        price:       { type: 'number', example: 18000 },
-        stock:       { type: 'number', example: 30 },
-        isApproved:  { type: 'boolean', example: true },
+        name:          { type: 'string', example: 'Hoodie BEM 2024 — Édition limitée' },
+        description:   { type: 'string', example: 'Description mise à jour.' },
+        price:         { type: 'number', example: 18000, description: 'Prix de vente en FCFA' },
+        purchasePrice: { type: 'number', example: 9000, nullable: true, description: 'Prix d\'achat en FCFA (null pour effacer)' },
+        stock:         { type: 'number', example: 30 },
+        isApproved:    { type: 'boolean', example: true },
         images: {
           type: 'array',
           items: { type: 'string', format: 'binary' },
@@ -138,6 +161,31 @@ export class ProductsController {
       ? (await this.cloudinaryService.uploadFiles(files)).map((r) => r.secure_url)
       : undefined;
     return this.productsService.update(id, { ...dto, ...(imageUrls && { imageUrls }) });
+  }
+
+  // ─── Seuil d'alerte stock ───────────────────────────────────────────────────
+
+  @Roles(UserRole.ADMIN)
+  @Patch(':id/threshold')
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: 'Définir ou supprimer le seuil d\'alerte de stock (admin)',
+    description: 'Définit la valeur de stock en dessous de laquelle une alerte est déclenchée. Envoyer `{ "threshold": null }` pour supprimer le seuil.',
+  })
+  @ApiParam({ name: 'id', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        threshold: { type: 'number', nullable: true, example: 5, description: 'Seuil en unités (null pour supprimer)' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Seuil mis à jour', schema: { example: { id: '...', name: 'Hoodie BEM', stock: 3, stockThreshold: 5 } } })
+  @ApiResponse({ status: 404, description: 'Produit introuvable' })
+  setThreshold(@Param('id') id: string, @Body() dto: SetThresholdDto) {
+    const threshold = dto.threshold !== undefined ? dto.threshold : null;
+    return this.productsService.setThreshold(id, threshold);
   }
 
   // ─── Suppression ────────────────────────────────────────────────────────────

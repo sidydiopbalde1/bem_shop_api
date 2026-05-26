@@ -90,23 +90,25 @@ model Category {
 }
 
 model Product {
-  id          String      @id @default(uuid())
-  name        String
-  description String?
-  price       Decimal     @db.Decimal(10, 2)
-  stock       Int         @default(0)
-  imageUrls   String[]
-  isApproved  Boolean     @default(false)
-  commission  Decimal     @default(0) @db.Decimal(5, 2)
-  categoryId  String
-  vendorId    String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  category    Category    @relation(fields: [categoryId], references: [id])
-  vendor      User?       @relation("VendorProducts", fields: [vendorId], references: [id])
-  cartItems   CartItem[]
-  orderItems  OrderItem[]
-  reviews     Review[]
+  id             String      @id @default(uuid())
+  name           String
+  description    String?
+  price          Decimal     @db.Decimal(10, 2)
+  purchasePrice  Decimal?    @db.Decimal(10, 2)
+  stock          Int         @default(0)
+  stockThreshold Int?
+  imageUrls      String[]
+  isApproved     Boolean     @default(false)
+  commission     Decimal     @default(0) @db.Decimal(5, 2)
+  categoryId     String
+  vendorId       String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  category       Category    @relation(fields: [categoryId], references: [id])
+  vendor         User?       @relation("VendorProducts", fields: [vendorId], references: [id])
+  cartItems      CartItem[]
+  orderItems     OrderItem[]
+  reviews        Review[]
 
   @@map("products")
 }

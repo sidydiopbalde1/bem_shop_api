@@ -12,14 +12,20 @@ export class CreateProductDto {
   @ApiPropertyOptional({ example: 'Hoodie officiel de la promotion BEM 2024, coton premium.' })
   @IsString() @IsOptional() description?: string;
 
-  @ApiProperty({ example: 15000, description: 'Prix en FCFA' })
+  @ApiProperty({ example: 15000, description: 'Prix de vente en FCFA' })
   @Type(() => Number) @IsNumber() price: number;
+
+  @ApiPropertyOptional({ example: 8000, description: 'Prix d\'achat (coût) en FCFA — visible admin uniquement' })
+  @Type(() => Number) @IsNumber() @Min(0) @IsOptional() purchasePrice?: number;
 
   @ApiProperty({ example: 50, description: 'Quantité en stock' })
   @Type(() => Number) @IsNumber() @Min(0) stock: number;
 
   @ApiProperty({ example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', description: 'UUID de la catégorie' })
   @IsUUID() categoryId: string;
+
+  @ApiPropertyOptional({ example: 20, description: 'Seuil d\'alerte de stock (défaut : 20)' })
+  @Type(() => Number) @IsNumber() @Min(0) @IsOptional() stockThreshold?: number;
 
   // Injecté par le controller après upload Cloudinary — non exposé dans le form
   imageUrls?: string[];
@@ -32,8 +38,11 @@ export class UpdateProductDto {
   @ApiPropertyOptional({ example: 'Description mise à jour.' })
   @IsString() @IsOptional() description?: string;
 
-  @ApiPropertyOptional({ example: 18000 })
+  @ApiPropertyOptional({ example: 18000, description: 'Prix de vente en FCFA' })
   @Type(() => Number) @IsNumber() @IsOptional() price?: number;
+
+  @ApiPropertyOptional({ example: 9000, description: 'Prix d\'achat (coût) en FCFA — visible admin uniquement' })
+  @Type(() => Number) @IsNumber() @Min(0) @IsOptional() purchasePrice?: number | null;
 
   @ApiPropertyOptional({ example: 30 })
   @Type(() => Number) @IsNumber() @IsOptional() stock?: number;
@@ -46,6 +55,19 @@ export class UpdateProductDto {
 
   // Injecté par le controller après upload Cloudinary — non exposé dans le form
   imageUrls?: string[];
+}
+
+export class SetThresholdDto {
+  @ApiProperty({
+    example: 5,
+    description: 'Seuil d\'alerte de stock. Une notification est déclenchée quand stock ≤ seuil. Envoyer null pour supprimer le seuil.',
+    nullable: true,
+  })
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  threshold?: number | null;
 }
 
 export class ProductFilterDto {
