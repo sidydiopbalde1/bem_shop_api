@@ -73,6 +73,7 @@ export class OrdersService {
           productName: i.product.name,
           quantity: i.quantity,
           unitPrice: Number(i.unitPrice),
+          imageUrl: i.product.imageUrls?.[0] ?? undefined,
         })),
         totalAmount: Number(order.totalAmount),
         deliveryType: order.deliveryType,

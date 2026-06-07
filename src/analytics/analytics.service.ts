@@ -18,7 +18,7 @@ export class AnalyticsService {
 
     return {
       totalOrders,
-      totalRevenue: totalRevenue._sum.amount ?? 0,
+      totalRevenue: Number(totalRevenue._sum.amount ?? 0),
       totalUsers,
       pendingProducts,
     };

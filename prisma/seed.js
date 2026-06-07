@@ -3,251 +3,183 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 async function main() {
-    console.log('🌱 Seeding products...');
+    console.log('Seeding products...');
     const categories = await Promise.all([
         prisma.category.upsert({
-            where: { slug: 'vetements' },
+            where: { slug: 'stylo' },
             update: {},
-            create: { name: 'Vêtements', slug: 'vetements' },
+            create: { name: 'Stylo', slug: 'stylo' },
         }),
         prisma.category.upsert({
-            where: { slug: 'accessoires' },
+            where: { slug: 'Audio' },
+            update: {},
+            create: { name: 'Audio', slug: 'audio' },
+        }),
+        prisma.category.upsert({
+            where: { slug: 'Accessoires' },
             update: {},
             create: { name: 'Accessoires', slug: 'accessoires' },
         }),
         prisma.category.upsert({
-            where: { slug: 'papeterie' },
+            where: { slug: 'Gaming' },
             update: {},
-            create: { name: 'Papeterie & Fournitures', slug: 'papeterie' },
-        }),
-        prisma.category.upsert({
-            where: { slug: 'goodies' },
-            update: {},
-            create: { name: 'Goodies', slug: 'goodies' },
+            create: { name: 'Gaming', slug: 'gaming' },
         }),
     ]);
-    const [vetements, accessoires, papeterie, goodies] = categories;
+    const [accessoires, stylo, audio, gaming] = categories;
     const products = [
         {
-            name: 'Hoodie BEM 2024',
-            description: 'Hoodie officiel de la promotion BEM 2024, coton premium 320g. Logo brodé sur la poitrine.',
-            price: 15000,
+            name: 'Accroche-Sac BEM',
+            description: "Garde ton sac propre et sécurisé partout\
+ Un accessoire discret mais ultra pratique\
+✔️ Fixation facile sur table\
+ ✔️ Design élégant\
+ ✔️ Résistant et durable\
+Parfait pour restaurants, salles de cours ou événements\
+",
+            price: 3900,
             purchasePrice: 8000,
-            stock: 80,
+            stock: 50,  
             stockThreshold: 20,
-            categoryId: vetements.id,
-            imageUrls: [],
+            categoryId: accessoires.id,
+            imageUrls: [
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780405342/products/pzjtau7mswdvqlzyuouw.jpg"
+            ],
             isApproved: true,
         },
         {
-            name: 'T-Shirt BEM Classic',
-            description: 'T-shirt 100 % coton, coupe unisexe. Sérigraphie logo BEM au dos.',
-            price: 6500,
+            name: 'Support Téléphone & Stylet BEM',
+            description: 'Travaille et navigue plus facilement.\
+ Un accessoire 3-en-1 pratique pour ton quotidien.\
+✔️ Support téléphone intégré\
+ ✔️ Stylo à bille fluide\
+ ✔️ Embout tactile pour écran\
+ ✔️ Léger et compact\
+Idéal pour les cours et le multitâche.\
+',
+            price: 1400,
             purchasePrice: 3000,
-            stock: 120,
+            stock: 50,
             stockThreshold: 25,
-            categoryId: vetements.id,
-            imageUrls: [],
+            categoryId: accessoires.id,
+            imageUrls: [
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780405115/products/u1kiklzbqwz2ydi92tui.jpg",
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780405115/products/y0r72clmsnnvz70qgck5.jpg"
+            ],
             isApproved: true,
         },
         {
-            name: 'Polo BEM Corporate',
-            description: 'Polo piqué professionnel avec logo brodé. Idéal pour les événements et présentations.',
-            price: 12000,
+            name: 'Selfie LED Light',
+            description: 'Améliore instantanément la qualité de tes photos et vidéos.\
+ Un éclairage portable idéal pour tes contenus.\
+✔️ Lumière LED haute intensité\
+ ✔️ Couleurs ajustables (RGB)\
+ ✔️ Clip universel smartphone\
+ ✔️ Idéal pour selfies, TikTok, live\
+Pour toujours être sous ton meilleur angle.\
+',
+            price: 8000,
             purchasePrice: 6500,
-            stock: 60,
+            stock: 50,
             stockThreshold: 15,
-            categoryId: vetements.id,
-            imageUrls: [],
+            categoryId: accessoires.id,
+            imageUrls: [
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780404884/products/ejw7oneuq5xk9dzadjxl.png"
+            ],
             isApproved: true,
         },
         {
-            name: 'Veste BEM Softshell',
-            description: 'Veste légère coupe-vent, parfaite pour les matins frais sur le campus.',
-            price: 25000,
+            name: 'Câble 3-en-1 Lumineux BEM',
+            description: 'Un seul câble pour tous tes appareils.\
+ Pratique, rapide et stylé avec son logo lumineux.\
+✔️ Multi-connecteurs (USB, USB-C, autres)\
+ ✔️ Charge rapide\
+ ✔️ Logo LED intégré\
+ ✔️ Format compact\
+Parfait pour le bureau, la maison ou les déplacements.\
+⚡ Nouveau produit\
+',
+            price: 5000,
             purchasePrice: 14000,
-            stock: 40,
+            stock: 50,
             stockThreshold: 10,
-            categoryId: vetements.id,
-            imageUrls: [],
+            categoryId: accessoires.id,
+            imageUrls: [
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1779441272/products/gkfofmf6ohoydxfn5ryy.png",
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1779441272/products/o50fi7sdzpjywhuy5pcv.png",
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780404487/products/bjgsvixs6mot2gjxubkx.jpg"
+            ],
             isApproved: true,
         },
         {
-            name: 'Sweat BEM Zip',
-            description: 'Sweat zippé à capuche, coton mélangé. Logo BEM brodé côté cœur.',
-            price: 18000,
+            name: 'Power Bank BEM',
+            description: 'Ne tombe plus jamais en panne de batterie.\
+ Cette power bank te permet de rester connecté toute la journée, où que tu sois.\
+✔️ Capacité 10 000 mAh\
+ ✔️ Charge rapide\
+ ✔️ Compatible tous appareils\
+ ✔️ Design compact et robuste\
+Ton indispensable au quotidien.\
+🔥 Best seller\
+',
+            price: 7000,
             purchasePrice: 9500,
             stock: 50,
             stockThreshold: 12,
-            categoryId: vetements.id,
-            imageUrls: [],
+            categoryId: accessoires.id,
+            imageUrls: [
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780404216/products/v3vuktcw5q884fjqiuh7.jpg",
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780404217/products/tmytxj65voqeboxfvdz7.jpg"
+            ],
             isApproved: true,
         },
         {
-            name: 'Casquette BEM Snapback',
-            description: 'Casquette réglable snapback, broderie logo BEM sur le devant. Taille unique.',
-            price: 5000,
+            name: 'Mini Ventilateur Portable BEM',
+            description: 'La chaleur ne sera plus un problème.\
+ Compact et puissant, ce mini ventilateur t’accompagne partout pour rester au frais.\
+✔️ 5 vitesses réglables\
+ ✔️ Recharge USB\
+ ✔️ Autonomie 2 à 4 heures\
+ ✔️ Léger et pliable\
+Idéal pour les journées chaudes à Dakar.\
+🔥 Disponible en quantité limitée\
+',
+            price: 6500,
             purchasePrice: 2200,
-            stock: 100,
+            stock: 50,
             stockThreshold: 20,
             categoryId: accessoires.id,
-            imageUrls: [],
+            imageUrls: [
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780403939/products/llw2toksbwdmtu4vqhyq.jpg",
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780403779/products/p1zrzxz4jm9yqxqeq6pa.jpg",
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780403779/products/ntwni9mcv0quav9lpx0x.jpg"   
+            ],
             isApproved: true,
         },
         {
-            name: 'Sac à dos BEM',
-            description: 'Sac à dos 25 L, compartiment laptop 15 pouces, patch logo BEM.',
-            price: 22000,
-            purchasePrice: 12000,
-            stock: 35,
-            stockThreshold: 10,
-            categoryId: accessoires.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Tote Bag BEM',
-            description: 'Tote bag en toile 100 % coton, impression sérigraphique logo BEM.',
-            price: 3500,
-            purchasePrice: 1200,
-            stock: 150,
-            stockThreshold: 30,
-            categoryId: accessoires.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Lanière BEM',
-            description: 'Lanière polyester sublimée aux couleurs BEM avec clip et porte-badge.',
-            price: 2000,
-            purchasePrice: 700,
-            stock: 200,
-            stockThreshold: 40,
-            categoryId: accessoires.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Porte-monnaie BEM',
-            description: 'Petit porte-monnaie en simili cuir, logo gravé, 3 emplacements carte.',
+            name: 'Bouteille Intelligente BEM',
+            description: 'Reste hydraté avec style, toute la journée.\
+ Cette bouteille intelligente affiche la température de ta boisson en temps réel et conserve la chaleur ou la fraîcheur pendant plusieurs heures.\
+✔️ Affichage digital de la température\
+ ✔️ Maintien thermique jusqu’à 6 heures\
+ ✔️ 100 % étanche\
+ ✔️ Format pratique (350 ml)\
+Parfaite pour les cours, le sport ou les déplacements.\
+🔥 Stock limité — collection 2026\
+ 📍 Retrait à BEM Dakar ou livraison disponible\
+',
             price: 4500,
-            purchasePrice: 2000,
-            stock: 70,
-            stockThreshold: 15,
+            purchasePrice: 12000,
+            stock: 50,
+            stockThreshold: 10,
             categoryId: accessoires.id,
-            imageUrls: [],
+            imageUrls: [
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780403153/products/ujwhatafoudwdoqwricx.jpg",
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780403155/products/bg7ysymhwk4pjck6glvg.jpg",
+                "https://res.cloudinary.com/dodmxir1f/image/upload/v1780403153/products/vftuxdfiimpatupx9cca.png"   
+            ],
             isApproved: true,
-        },
-        {
-            name: 'Carnet A5 BEM',
-            description: 'Carnet couverture rigide A5, 200 pages lignées, logo BEM gaufré.',
-            price: 4000,
-            purchasePrice: 1800,
-            stock: 90,
-            stockThreshold: 20,
-            categoryId: papeterie.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Stylo BEM Pack x3',
-            description: 'Pack de 3 stylos bille rétractables aux couleurs BEM. Encre bleue.',
-            price: 2500,
-            purchasePrice: 900,
-            stock: 180,
-            stockThreshold: 35,
-            categoryId: papeterie.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Agenda BEM 2025',
-            description: 'Agenda annuel A5, semainier, couverture cuir synthétique, logo BEM.',
-            price: 7500,
-            purchasePrice: 3500,
-            stock: 55,
-            stockThreshold: 10,
-            categoryId: papeterie.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Classeur BEM A4',
-            description: 'Classeur 4 anneaux A4 dos 4 cm, couverture rigide imprimée logo BEM.',
-            price: 3000,
-            purchasePrice: 1200,
-            stock: 75,
-            stockThreshold: 15,
-            categoryId: papeterie.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Mug BEM Thermos',
-            description: 'Mug isotherme 350 ml, double paroi inox, logo BEM sérigraphié. Garde chaud 6h.',
-            price: 8500,
-            purchasePrice: 4000,
-            stock: 65,
-            stockThreshold: 15,
-            categoryId: goodies.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Stickers BEM Pack x10',
-            description: 'Pack de 10 stickers vinyle BEM waterproof. Différents formats et designs.',
-            price: 1500,
-            purchasePrice: 500,
-            stock: 300,
-            stockThreshold: 50,
-            categoryId: goodies.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Pin\'s BEM',
-            description: 'Pin\'s émaillé logo BEM, finition dorée, attache papillon. Diamètre 2,5 cm.',
-            price: 2000,
-            purchasePrice: 800,
-            stock: 200,
-            stockThreshold: 40,
-            categoryId: goodies.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Tapis de souris BEM',
-            description: 'Tapis de souris XL 80×40 cm, surface lisse, base antidérapante, logo BEM.',
-            price: 6000,
-            purchasePrice: 2800,
-            stock: 45,
-            stockThreshold: 10,
-            categoryId: goodies.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Bouteille sport BEM',
-            description: 'Gourde sport 750 ml, sans BPA, bouchon à visser, logo BEM sérigraphié.',
-            price: 7000,
-            purchasePrice: 3200,
-            stock: 55,
-            stockThreshold: 12,
-            categoryId: goodies.id,
-            imageUrls: [],
-            isApproved: true,
-        },
-        {
-            name: 'Coussin BEM',
-            description: 'Coussin décoratif 40×40 cm, housse velours, logo BEM brodé. Idéal pour le bureau.',
-            price: 9000,
-            purchasePrice: 4500,
-            stock: 30,
-            stockThreshold: 8,
-            categoryId: goodies.id,
-            imageUrls: [],
-            isApproved: true,
-        },
+        }
     ];
     let created = 0;
     for (const data of products) {

@@ -3,71 +3,163 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Confirmation de commande</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-    .container { max-width: 600px; margin: 30px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .header { background: #1a73e8; padding: 30px 24px; text-align: center; }
-    .header h1 { color: #ffffff; margin: 0; font-size: 22px; }
-    .body { padding: 28px 24px; color: #333; }
-    .body h2 { margin-top: 0; font-size: 18px; }
-    .order-id { background: #f0f4ff; border-left: 4px solid #1a73e8; padding: 12px 16px; border-radius: 4px; font-weight: bold; font-size: 15px; margin-bottom: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-    th { background: #f0f4ff; padding: 10px 12px; text-align: left; font-size: 13px; color: #555; }
-    td { padding: 10px 12px; border-bottom: 1px solid #eee; font-size: 14px; }
-    .total-row td { font-weight: bold; font-size: 15px; border-bottom: none; }
-    .delivery-box { margin-top: 20px; background: #f9f9f9; padding: 14px 16px; border-radius: 6px; font-size: 14px; }
-    .footer { background: #f4f4f4; padding: 18px 24px; text-align: center; font-size: 12px; color: #888; }
-    .btn { display: inline-block; margin-top: 20px; padding: 12px 28px; background: #1a73e8; color: #fff; text-decoration: none; border-radius: 6px; font-size: 14px; }
-  </style>
+  <title>Confirmation de commande — BEM Shop</title>
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>BEM Shop — Confirmation de commande</h1>
-    </div>
-    <div class="body">
-      <h2>Bonjour {{clientFirstName}},</h2>
-      <p>Merci pour votre commande ! Nous l'avons bien reçue et elle est en cours de traitement.</p>
+<body style="margin:0;padding:0;background:#f4f2ef;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2ef;padding:32px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);max-width:600px;width:100%;">
 
-      <div class="order-id">Commande #{{orderId}}</div>
-
-      <table>
-        <thead>
+          <!-- Header -->
           <tr>
-            <th>Produit</th>
-            <th>Qté</th>
-            <th>Prix unitaire</th>
-            <th>Sous-total</th>
+            <td style="background:#0d0d0d;padding:28px 36px;text-align:center;">
+              <p style="margin:0;color:#ffffff;font-size:22px;font-weight:800;letter-spacing:0.08em;">BEM SHOP</p>
+              <p style="margin:6px 0 0;color:#999;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;">Votre commande est confirmée</p>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {{#each items}}
+
+          <!-- Hero check -->
           <tr>
-            <td>{{this.productName}}</td>
-            <td>{{this.quantity}}</td>
-            <td>{{this.unitPrice}} FCFA</td>
-            <td>{{this.subtotal}} FCFA</td>
+            <td style="padding:36px 36px 24px;text-align:center;border-bottom:1px solid #f0ede8;">
+              <div style="width:64px;height:64px;background:#dcfce7;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;">
+                <span style="font-size:28px;">✓</span>
+              </div>
+              <h1 style="margin:0 0 8px;font-size:22px;font-weight:800;color:#0d0d0d;">Merci {{clientFirstName}} !</h1>
+              <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.6;">
+                Votre commande a bien été reçue et est en cours de traitement.<br/>
+                Vous serez notifié de chaque mise à jour.
+              </p>
+              <!-- Order ID badge -->
+              <div style="display:inline-block;margin-top:20px;padding:10px 20px;background:#f7f6f4;border:1px solid #e5e2dc;border-radius:8px;">
+                <span style="font-size:11px;color:#9ca3af;letter-spacing:0.1em;text-transform:uppercase;">Numéro de commande</span><br/>
+                <span style="font-family:monospace;font-size:16px;font-weight:800;color:#0d0d0d;letter-spacing:0.05em;">#{{orderId}}</span>
+              </div>
+            </td>
           </tr>
-          {{/each}}
-          <tr class="total-row">
-            <td colspan="3">Total</td>
-            <td>{{totalAmountFormatted}} FCFA</td>
+
+          <!-- Products -->
+          <tr>
+            <td style="padding:28px 36px 0;">
+              <p style="margin:0 0 16px;font-size:13px;font-weight:700;color:#0d0d0d;text-transform:uppercase;letter-spacing:0.08em;">Articles commandés</p>
+
+              {{#each items}}
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;border:1px solid #f0ede8;border-radius:10px;overflow:hidden;">
+                <tr>
+                  {{#if this.imageUrl}}
+                  <td width="80" style="padding:12px;vertical-align:middle;">
+                    <img src="{{this.imageUrl}}" alt="{{this.productName}}"
+                      width="72" height="72"
+                      style="border-radius:8px;object-fit:cover;display:block;background:#f7f6f4;" />
+                  </td>
+                  {{else}}
+                  <td width="80" style="padding:12px;vertical-align:middle;">
+                    <div style="width:72px;height:72px;background:#f7f6f4;border-radius:8px;"></div>
+                  </td>
+                  {{/if}}
+                  <td style="padding:12px 12px 12px 0;vertical-align:middle;">
+                    <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#0d0d0d;">{{this.productName}}</p>
+                    <p style="margin:0;font-size:12px;color:#9ca3af;">Quantité : {{this.quantity}}</p>
+                  </td>
+                  <td style="padding:12px;vertical-align:middle;text-align:right;white-space:nowrap;">
+                    <p style="margin:0;font-size:13px;font-weight:800;color:#0d0d0d;">{{this.unitPrice}} FCFA</p>
+                    <p style="margin:4px 0 0;font-size:11px;color:#9ca3af;">/ unité</p>
+                  </td>
+                </tr>
+              </table>
+              {{/each}}
+
+              <!-- Total -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;border-top:2px solid #0d0d0d;padding-top:14px;">
+                <tr>
+                  <td style="font-size:14px;font-weight:700;color:#0d0d0d;padding-top:14px;">Total à payer</td>
+                  <td style="font-size:20px;font-weight:900;color:#0d0d0d;text-align:right;padding-top:14px;">{{totalAmountFormatted}} FCFA</td>
+                </tr>
+              </table>
+            </td>
           </tr>
-        </tbody>
-      </table>
 
-      <div class="delivery-box">
-        <strong>Mode de livraison :</strong> {{deliveryLabel}}<br/>
-        {{#if address}}<strong>Adresse :</strong> {{address}}{{/if}}
-      </div>
+          <!-- Pickup info -->
+          <tr>
+            <td style="padding:28px 36px 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef9f0;border:1px solid #fde68a;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="padding:20px 24px;">
+                    <p style="margin:0 0 14px;font-size:13px;font-weight:800;color:#0d0d0d;text-transform:uppercase;letter-spacing:0.08em;">
+                      📍 Lieu de récupération
+                    </p>
+                    <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:#0d0d0d;">BEM Shop — Campus de Dakar</p>
+                    <p style="margin:0 0 12px;font-size:13px;color:#6b7280;line-height:1.6;">
+                      Université Cheikh Anta Diop (UCAD), Dakar<br/>
+                      Lundi – Vendredi : 08h00 – 18h00<br/>
+                      Samedi : 09h00 – 14h00
+                    </p>
+                    <p style="margin:0;font-size:12px;color:#92400e;background:#fef3c7;padding:8px 12px;border-radius:6px;display:inline-block;">
+                      Merci de présenter ce numéro de commande à la récupération : <strong>#{{orderId}}</strong>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-      <p>Vous serez notifié par email à chaque mise à jour de votre commande.</p>
-      <a href="{{frontendUrl}}/orders" class="btn">Suivre ma commande</a>
-    </div>
-    <div class="footer">
-      &copy; BEM Shop — Cet email a été envoyé automatiquement, merci de ne pas y répondre.
-    </div>
-  </div>
+          <!-- Payment methods -->
+          <tr>
+            <td style="padding:20px 36px 28px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f6f4;border:1px solid #e5e2dc;border-radius:10px;">
+                <tr>
+                  <td style="padding:20px 24px;">
+                    <p style="margin:0 0 14px;font-size:13px;font-weight:800;color:#0d0d0d;text-transform:uppercase;letter-spacing:0.08em;">
+                      💳 Paiement à la récupération
+                    </p>
+                    <p style="margin:0 0 10px;font-size:13px;color:#4b5563;">
+                      Le paiement s'effectue uniquement lors de la récupération de votre commande. Modes acceptés :
+                    </p>
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding:4px 10px 4px 0;">
+                          <span style="display:inline-block;padding:5px 12px;background:#fff;border:1px solid #e5e2dc;border-radius:20px;font-size:12px;font-weight:600;color:#0d0d0d;">Espèces</span>
+                        </td>
+                        <td style="padding:4px 10px 4px 0;">
+                          <span style="display:inline-block;padding:5px 12px;background:#fff;border:1px solid #e5e2dc;border-radius:20px;font-size:12px;font-weight:600;color:#ff6600;">Orange Money</span>
+                        </td>
+                        <td style="padding:4px 10px 4px 0;">
+                          <span style="display:inline-block;padding:5px 12px;background:#fff;border:1px solid #e5e2dc;border-radius:20px;font-size:12px;font-weight:600;color:#1b3cfc;">Wave</span>
+                        </td>
+                        <td style="padding:4px 10px 4px 0;">
+                          <span style="display:inline-block;padding:5px 12px;background:#fff;border:1px solid #e5e2dc;border-radius:20px;font-size:12px;font-weight:600;color:#009944;">Free Money</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- CTA -->
+          <tr>
+            <td style="padding:0 36px 32px;text-align:center;">
+              <a href="{{frontendUrl}}/compte"
+                style="display:inline-block;padding:14px 32px;background:#0d0d0d;color:#ffffff;font-size:13px;font-weight:700;text-decoration:none;border-radius:8px;letter-spacing:0.06em;">
+                Suivre ma commande →
+              </a>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f7f6f4;padding:20px 36px;text-align:center;border-top:1px solid #e5e2dc;">
+              <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.6;">
+                © BEM Shop — Cet email a été envoyé automatiquement, merci de ne pas y répondre.<br/>
+                Des questions ? Contactez-nous via notre site.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>

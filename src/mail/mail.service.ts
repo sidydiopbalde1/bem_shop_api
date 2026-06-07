@@ -7,6 +7,7 @@ export interface OrderItem {
   productName: string;
   quantity: number;
   unitPrice: number;
+  imageUrl?: string;
 }
 
 export interface OrderMailData {
@@ -48,7 +49,7 @@ export class MailService {
           ...data,
           orderId: data.orderId.slice(0, 8).toUpperCase(),
           totalAmountFormatted: data.totalAmount.toLocaleString('fr-FR'),
-          deliveryLabel: data.deliveryType === 'CAMPUS' ? 'Livraison sur campus' : 'Livraison à domicile',
+          deliveryLabel: data.deliveryType === 'CAMPUS' ? 'Récupération sur campus' : 'Livraison à domicile',
           frontendUrl: this.config.get<string>('FRONTEND_URL', 'http://localhost:3001'),
         },
       });
@@ -74,7 +75,7 @@ export class MailService {
           ...data,
           orderId: data.orderId.slice(0, 8).toUpperCase(),
           totalAmountFormatted: data.totalAmount.toLocaleString('fr-FR'),
-          deliveryLabel: data.deliveryType === 'CAMPUS' ? 'Livraison sur campus' : 'Livraison à domicile',
+          deliveryLabel: data.deliveryType === 'CAMPUS' ? 'Récupération sur campus' : 'Livraison à domicile',
           frontendUrl: this.config.get<string>('FRONTEND_URL', 'http://localhost:3001'),
         },
       });
