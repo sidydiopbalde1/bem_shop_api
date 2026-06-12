@@ -438,7 +438,7 @@ MAIL_PORT=587
 MAIL_SECURE=false
 MAIL_USER=votre.email@gmail.com
 MAIL_PASS=motdepasse_application_gmail
-MAIL_FROM="BEM Shop <no-reply@votre-domaine.com>"
+MAIL_FROM="BEM Shop<no-reply@votre-domaine.com>"
 ADMIN_EMAIL=admin@votre-domaine.com
 ```
 
@@ -513,3 +513,98 @@ docker compose exec api npx prisma migrate deploy
 
 
 ssh sdbalde@180.149.197.127
+
+# root ssh
+
+ssh root@180.149.197.127
+
+cd /home/sdbalde/apps/bem-api
+npm run build
+npx prisma migrate deploy
+pm2 restart bem-api --update-env
+
+# Vérifier
+pm2 logs bem-api --lines 20
+
+
+# Voir les logs en temps réel
+pm2 logs bem-api --lines 30
+
+Sauvegarder PM2 pour le redémarrage automatique :
+pm2 save
+pm2 startup
+# → Copie-colle la commande sudo qui s'affiche
+
+
+
+# Créer les templates Node.js
+mkdir -p /usr/local/hestia/data/templates/web/nginx/proxy
+
+tee /usr/local/hestia/data/templates/web/nginx/proxy/nodejs.tpl << 'EOF'
+server {
+    listen      %ip%:%web_port%;
+    server_name %domain_idn% %alias_idn%;
+    error_log   /var/log/%web_system%/domains/%domain%.error.log error;
+    location / {
+        proxy_pass         http://127.0.0.1:%proxy_port%;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade    $http_upgrade;
+        proxy_set_header   Connection 'upgrade';
+        proxy_set_header   Host       $host;
+        proxy_set_header   X-Real-IP  $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+EOF
+
+tee /usr/local/hestia/data/templates/web/nginx/proxy/nodejs.stpl << 'EOF'
+server {
+    listen      %ip%:%web_ssl_port% ssl;
+    server_name %domain_idn% %alias_idn%;
+    ssl_certificate      %ssl_pem%;
+    ssl_certificate_key  %ssl_key%;
+    error_log   /var/log/%web_system%/domains/%domain%.error.log error;
+    location / {
+        proxy_pass         http://127.0.0.1:%proxy_port%;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade    $http_upgrade;
+        proxy_set_header   Connection 'upgrade';
+        proxy_set_header   Host       $host;
+        proxy_set_header   X-Real-IP  $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+EOF
+
+# Donner sudo à sdbalde
+echo "sdbalde ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+echo "✅ Fait !"
+
+
+
+Contacte l'administrateur système et envoie-lui ce message :
+
+Bonjour, j'ai besoin que vous effectuiez ces actions sur le serveur vps111252 pour mon déploiement :
+
+Créer les fichiers de template Nginx dans /usr/local/hestia/data/templates/web/nginx/proxy/ (nodejs.tpl et nodejs.stpl)
+M'ajouter aux sudoers : echo "sdbalde ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+
+
+pm2 status          # vérifier que les apps tournent
+pm2 logs            # voir les erreurs
+pm2 restart all     # redémarrer si problème
+pm2 save            # sauvegarder la configuration
+
+
+✅ Backend NestJS    → https://api.boutique.bem.sn/api/docs
+✅ Frontend Next.js  → https://boutique.bem.sn
+✅ SSL Let's Encrypt → Valide sur les 2 domaines (expire sept 2026)
+✅ Renouvellement    → Automatique via certbot
+✅ Base de données   → PostgreSQL 15 tables
+✅ PM2               → Apps online 24/7

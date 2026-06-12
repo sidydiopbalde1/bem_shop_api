@@ -40,7 +40,7 @@ export class CreateOrderDto {
   @IsEnum(DeliveryType)
   deliveryType: DeliveryType;
 
-  @ApiPropertyOptional({ example: 'Cité universitaire Fann, Bâtiment B, Chambre 12', description: 'Obligatoire si deliveryType = HOME' })
+  @ApiPropertyOptional({ example: 'Sacré coeur 3, Bâtiment B, Chambre 12', description: 'Obligatoire si deliveryType = HOME' })
   @IsString() @IsOptional()
   address?: string;
 }
