@@ -70,3 +70,9 @@ npm run build && pm2 restart bem-api
 
 # Vérifier
 pm2 logs bem-web --lines 20
+
+
+# En cas de problème :
+
+pm2 restart bem-api
+pm2 restart bem-web
