@@ -511,12 +511,15 @@ npx prisma migrate deploy
 docker compose exec api npx prisma migrate deploy
 ```
 
-
 ssh sdbalde@180.149.197.127
+
++UpZablKG0b=XVx)
 
 # root ssh
 
 ssh root@180.149.197.127
+
+W4L7T9WrHR
 
 cd /home/sdbalde/apps/bem-api
 npm run build
