@@ -20,7 +20,7 @@ import { MailService } from './mail.service';
           },
         },
         defaults: {
-          from: config.get<string>('MAIL_FROM', '"BEM Shop" <no-reply@bemshop.com>'),
+          from: config.get<string>('MAIL_FROM', '"BEM Shop" <no-reply@bem.sn>'),
         },
         template: {
           dir: join(__dirname, 'templates'),
